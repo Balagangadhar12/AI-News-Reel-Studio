@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}AI News Reel Studio - Turn News Articles into Vertical Videos{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Hero Section -->
+    <div class="row align-items-center justify-content-center text-center my-5 py-3">
+        <div class="col-lg-8">
+            <div class="badge bg-dark border border-secondary text-secondary px-3 py-2 rounded-pill mb-3">
+                <i class="fa-solid fa-sparkles me-1 text-highlight"></i> AI Video Automation Suite
+            </div>
+            <h1 class="display-3 fw-bold mb-3">
+                <span class="glow-text">Turn News Into</span><br>
+                <span class="typing-container glow-text-secondary" id="hero-typing">Professional Shorts</span>
+            </h1>
+            <p class="lead text-muted px-lg-5 mb-4">
+                Instantly convert any online news article or search topic into a stunning 9:16 vertical video with AI voice narration, pan-zoom visual effects, and synced subtitle overlays.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#generate-section" class="btn btn-glow"><i class="fa-solid fa-rocket me-1"></i> Get Started Free</a>
+                <a href="#history-section" class="btn btn-secondary-glow"><i class="fa-solid fa-play me-1"></i> Browse Gallery</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Quick Banner -->
+    <div class="row g-4 my-5 justify-content-center">
+        <div class="col-md-3">
+            <div class="glass-card text-center p-3 h-100">
+                <i class="fa-solid fa-microphone-lines fa-2x text-primary mb-2"></i>
+                <h5 class="fw-bold">Edge-TTS Voice</h5>
+                <p class="small text-muted mb-0">Expressive narration in multiple accents.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card text-center p-3 h-100">
+                <i class="fa-solid fa-image-portrait fa-2x text-secondary mb-2"></i>
+                <h5 class="fw-bold">AI Imagery</h5>
+                <p class="small text-muted mb-0">Contextual visuals matched to story scenes.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card text-center p-3 h-100">
+                <i class="fa-solid fa-closed-captioning fa-2x text-accent mb-2"></i>
+                <h5 class="fw-bold">Dynamic Subtitles</h5>
+                <p class="small text-muted mb-0">Clean rounded captions overlayed on frame.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace Section -->
+    <div id="generate-section" class="row justify-content-center my-5 scroll-mt">
+        <div class="col-lg-8">
+            <div class="glass-card">
+                <h3 class="fw-bold mb-4"><i class="fa-solid fa-sliders text-secondary me-2"></i>Create a News Reel</h3>
+
+                <div class="latest-news-panel mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                        <div>
+                            <label class="form-label text-muted small fw-bold mb-1">STEP 1</label>
+                            <h5 class="fw-bold mb-0">Select one latest headline</h5>
+                        </div>
+                        <button id="btn-refresh-news" class="btn btn-secondary-glow btn-sm" type="button">
+                            <i class="fa-solid fa-rotate me-1"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" id="input-news-topic" class="form-control glass-input" placeholder="Filter latest news, e.g. AI, business, sports">
+                        <button id="btn-load-topic" class="btn btn-secondary-glow" type="button">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i> Load
+                        </button>
+                    </div>
+                    <div id="latest-news-list" class="latest-news-list">
+                        <div class="news-loading">Loading latest headlines...</div>
+                    </div>
+                </div>
+                
+                <!-- Twin Actions Input Forms -->
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">STEP 2</label>
+                    <ul class="nav nav-pills gap-2 mb-3" id="input-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-secondary-glow active btn-sm" id="latest-tab" data-bs-toggle="pill" data-bs-target="#tab-latest" type="button" role="tab"><i class="fa-solid fa-newspaper me-1"></i> Use Selected Headline</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-secondary-glow btn-sm" id="search-tab" data-bs-toggle="pill" data-bs-target="#tab-search" type="button" role="tab"><i class="fa-solid fa-magnifying-glass me-1"></i> Search News</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-secondary-glow btn-sm" id="url-tab" data-bs-toggle="pill" data-bs-target="#tab-url" type="button" role="tab"><i class="fa-solid fa-link me-1"></i> Scrape Article URL</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="input-tabs-content">
+                        <!-- Selected Headline Tab -->
+                        <div class="tab-pane fade show active" id="tab-latest" role="tabpanel">
+                            <div class="selected-headline-box" id="selected-headline-box">
+                                <span class="text-muted">No headline selected yet. Click a headline in Step 1.</span>
+                            </div>
+                        </div>
+
+                        <!-- Search News Tab -->
+                        <div class="tab-pane fade" id="tab-search" role="tabpanel">
+                            <div class="mb-2">
+                                <input type="text" id="input-query" class="form-control glass-input" placeholder="e.g. SpaceX Mars mission updates or Apple Vision Pro reviews">
+                                <div class="form-text text-muted">We will search NewsAPI or Google News and use the best matching article.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- URL Paste Tab -->
+                        <div class="tab-pane fade" id="tab-url" role="tabpanel">
+                            <div class="mb-2">
+                                <input type="url" id="input-url" class="form-control glass-input" placeholder="e.g. https://techcrunch.com/2026/07/02/example-article/">
+                                <div class="form-text text-muted">Paste any news article URL to extract its full text body.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Selection Options -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="select-voice" class="form-label text-muted small fw-bold">VOICE PROFILE</label>
+                        <select id="select-voice" class="form-select glass-input glass-select">
+                            {% for id, details in voices.items() %}
+                            <option value="{{ id }}" {% if id == 'en-US-GuyNeural' %}selected{% endif %}>
+                                {{ details.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">RENDER MODE</label>
+                        <div class="quick-mode-box">
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" role="switch" id="toggle-fast-mode" checked>
+                                <label class="form-check-label fw-bold" for="toggle-fast-mode">Quick voice reel</label>
+                            </div>
+                            <div class="small text-muted">Fast voice narration with simple news cards. Turn off for AI images and subtitles.</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label text-muted small fw-bold">STEP 3</label>
+                        <button id="btn-generate" class="btn btn-glow w-100 py-3" disabled><i class="fa-solid fa-wand-magic-sparkles me-2"></i> Select a Headline First</button>
+                    </div>
+                </div>
+
+                <!-- Live Progress Drawer -->
+                <div class="progress-drawer" id="progress-container">
+                    <hr class="border-secondary my-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-secondary"><i class="fa-solid fa-rotate fa-spin me-2"></i>Generation Progress</h5>
+                        <span class="badge bg-dark border border-secondary text-secondary" id="progress-percentage">0%</span>
+                    </div>
+                    
+                    <div class="progress bg-dark mb-4" style="height: 10px; border: 1px solid var(--border-glass);">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" id="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+
+                    <!-- Pipeline Steps Timeline -->
+                    <div class="pipeline-timeline">
+                        <div class="pipeline-step" id="step-1">
+                            <div class="pulse-ring"></div>
+                            <div class="step-marker">1</div>
+                            <div class="step-title">Initializing Workspace</div>
+                            <div class="step-desc">Setting up files structures and task tokens...</div>
+                        </div>
+                        <div class="pipeline-step" id="step-2">
+                            <div class="pulse-ring"></div>
+                            <div class="step-marker">2</div>
+                            <div class="step-title">Fetching & Scraping Article</div>
+                            <div class="step-desc">Downloading webpage content and scrubbing markup...</div>
+                        </div>
+                        <div class="pipeline-step" id="step-3">
+                            <div class="pulse-ring"></div>
+                            <div class="step-marker">3</div>
+                            <div class="step-title">AI Script Writing</div>
+                            <div class="step-desc">Analyzing key news points and drafting 60-second voice script...</div>
+                        </div>
+                        <div class="pipeline-step" id="step-4">
+                            <div class="pulse-ring"></div>
+                            <div class="step-marker">4</div>
+                            <div class="step-title">Narration Voiceover Synthesis</div>
+                            <div class="step-desc">Generating Edge-TTS voiceovers for each narration scene...</div>
+                        </div>
+                        <div class="pipeline-step" id="step-5">
+                            <div class="pulse-ring"></div>
+                            <div class="step-marker">5</div>
+                            <div class="step-title">Contextual Imagery Generation</div>
+                            <div class="step-desc">Prompting AI generators to render vertical visual scenes...</div>
+                        </div>
+                        <div class="pipeline-step" id="step-6">
+                            <div class="pulse-ring"></div>
+                            <div class="step-marker">6</div>
+                            <div class="step-title">Stitching & Rendering Reel</div>
+                            <div class="step-desc">Compiling scales, zoom transitions, and rendering audio tracks...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Studio History Gallery Section -->
+    <div id="history-section" class="my-5 py-3 scroll-mt">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1"><i class="fa-solid fa-photo-film text-primary me-2"></i>Studio Gallery</h3>
+                <p class="text-muted mb-0 small">Previously compiled vertical short-form reels</p>
+            </div>
+            <a href="#generate-section" class="btn btn-secondary-glow btn-sm"><i class="fa-solid fa-plus me-1"></i> Create New</a>
+        </div>
+        
+        <div class="row g-4" id="gallery-container">
+            {% if recent_reels %}
+                {% for reel in recent_reels %}
+                <div class="col-md-4">
+                    <div class="reel-card">
+                        <div class="reel-card-thumbnail">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <!-- We can overlay the title or background graphic if we had one -->
+                        </div>
+                        <div class="reel-card-body">
+                            <h5 class="reel-card-title">{{ reel.title }}</h5>
+                            <p class="reel-card-text">{{ reel.summary }}</p>
+                            <div class="reel-card-meta">
+                                <span><i class="fa-regular fa-clock me-1 text-secondary"></i> {{ reel.created_at }}</span>
+                                <a href="/result/{{ reel.task_id }}" class="btn btn-secondary-glow btn-sm py-1 px-3">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="glass-card max-width-600 mx-auto py-5">
+                        <i class="fa-solid fa-film fa-3x text-muted mb-3"></i>
+                        <h5 class="fw-bold">No Reels Found</h5>
+                        <p class="text-muted mb-0">Create your very first vertical short using the form above!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

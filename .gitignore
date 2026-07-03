@@ -1,0 +1,36 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Environment files
+.env
+.env.*
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build / output / uploads
+output/
+uploads/
+static/generated/
+
+# Project metadata
+*.egg-info/
+pip-wheel-metadata/
+
+# Test and tooling
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# History or large JSON outputs
+history.json

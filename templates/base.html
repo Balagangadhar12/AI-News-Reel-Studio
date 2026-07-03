@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI News Reel Studio - Turn News into Reels{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <!-- SEO Tags -->
+    <meta name="description" content="AI News Reel Studio dynamically parses any news article, generates a professional video script, generates AI voice overs, sources relevant visuals, and renders full 9:16 vertical shorts for TikTok, YouTube, and Instagram.">
+    <meta name="author" content="AI News Reel Studio">
+    <meta name="keywords" content="AI, Video Editor, News to Video, Short Video Generator, Automation, Flask, Gemini, Edge TTS">
+</head>
+<body>
+
+    <!-- Canvas for floating particle background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-glass sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fa-solid fa-clapperboard-play fa-xl text-primary me-2"></i>
+                <span class="glow-text">AI News Reel Studio</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="/#generate-section"><i class="fa-solid fa-wand-magic-sparkles me-1 text-secondary"></i> Create Reel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="/#history-section"><i class="fa-solid fa-history me-1 text-accent"></i> Studio Gallery</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-glow btn-sm py-2 px-3 text-white" href="https://github.com" target="_blank">
+                            <i class="fa-brands fa-github me-1"></i> Star Project
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Block -->
+    <main class="py-5">
+        {% block content %}
+        <!-- Default Content Placeholder (Error layout if block is not overridden) -->
+        <div class="container text-center my-5 py-5">
+            <div class="glass-card max-width-600 mx-auto py-5">
+                <i class="fa-solid fa-triangle-exclamation fa-4x text-danger mb-4"></i>
+                <h1 class="mb-3">{{ title or "Oops!" }}</h1>
+                <p class="text-muted mb-4">{{ error_message or "An unexpected issue occurred." }}</p>
+                <a href="/" class="btn btn-glow"><i class="fa-solid fa-arrow-left me-1"></i> Back to Home</a>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-top border-dark py-4 mt-auto" style="background-color: rgba(7, 9, 19, 0.95);">
+        <div class="container text-center">
+            <p class="mb-2 text-muted">&copy; 2026 AI News Reel Studio. Powered by Gemini LLM & MoviePy.</p>
+            <div class="d-flex justify-content-center gap-3 fs-5">
+                <a href="#" class="text-muted hover-light"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="text-muted hover-light"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" class="text-muted hover-light"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Toast notifications structure -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="status-toast" class="toast glass-toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-transparent border-bottom border-dark text-white d-flex justify-content-between">
+                <strong class="me-auto" id="toast-title"><i class="fa-solid fa-circle-info text-secondary me-2"></i> Notification</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-body">
+                Notification description.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

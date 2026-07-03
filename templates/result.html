@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}{{ reel.title }} - AI Generated Reel{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Back Button Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="/" class="btn btn-secondary-glow btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Back to Studio</a>
+        </div>
+    </div>
+
+    <!-- Main Results Layout -->
+    <div class="row g-5">
+        
+        <!-- Left Column: Video Preview and Downloads -->
+        <div class="col-lg-5 col-md-12 text-center">
+            <div class="video-panel mb-4">
+                <div class="video-container">
+                    <video controls autoplay loop>
+                        <source src="/videos/{{ reel.task_id }}.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            
+            <!-- Quick Actions Panel -->
+            <div class="glass-card p-4 mx-auto" style="max-width: 380px;">
+                <h5 class="fw-bold mb-3 text-start"><i class="fa-solid fa-circle-down text-primary me-2"></i>Export Options</h5>
+                
+                <a href="/download/video/{{ reel.task_id }}" class="btn btn-glow w-100 mb-3 text-white">
+                    <i class="fa-solid fa-file-video me-2"></i> Download Reel MP4
+                </a>
+                
+                <div class="row g-2">
+                    <div class="col-6">
+                        <a href="/download/audio/{{ reel.task_id }}" class="btn btn-secondary-glow w-100 btn-sm py-2">
+                            <i class="fa-solid fa-file-audio me-1 text-secondary"></i> Audio Track
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/download/script/{{ reel.task_id }}" class="btn btn-secondary-glow w-100 btn-sm py-2">
+                            <i class="fa-solid fa-file-lines me-1 text-accent"></i> Full Script
+                        </a>
+                    </div>
+                </div>
+                
+                <hr class="border-secondary my-3">
+                
+                <div class="d-flex gap-2">
+                    <button id="btn-copy-script" class="btn btn-secondary-glow btn-sm flex-fill py-2" data-script="{% for scene in reel.scenes %}[Scene {{ scene.scene_number }}] {{ scene.narration }} {% endfor %}">
+                        <i class="fa-solid fa-copy me-1"></i> Copy Script
+                    </button>
+                    <button id="btn-share" class="btn btn-secondary-glow btn-sm flex-fill py-2" data-url="{{ request.url }}">
+                        <i class="fa-solid fa-share-nodes me-1"></i> Share Link
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column: Structured Script & Media Details -->
+        <div class="col-lg-7 col-md-12">
+            <div class="glass-card h-100">
+                <h2 class="fw-bold mb-2 glow-text">{{ reel.title }}</h2>
+                <p class="text-muted mb-4 small"><i class="fa-solid fa-calendar-check me-1"></i> Rendered on {{ reel.created_at }}</p>
+                
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs tab-nav" id="result-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#tab-summary" type="button" role="tab"><i class="fa-solid fa-quote-left me-1"></i> Summary</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="script-tab" data-bs-toggle="tab" data-bs-target="#tab-script" type="button" role="tab"><i class="fa-solid fa-book-open me-1"></i> Scene Script</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="visuals-tab" data-bs-toggle="tab" data-bs-target="#tab-visuals" type="button" role="tab"><i class="fa-solid fa-images me-1"></i> Visuals</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="meta-tab" data-bs-toggle="tab" data-bs-target="#tab-meta" type="button" role="tab"><i class="fa-solid fa-server me-1"></i> Metadata</button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="result-tabs-content">
+                    
+                    <!-- Summary Tab -->
+                    <div class="tab-pane fade show active" id="tab-summary" role="tabpanel">
+                        <div class="p-2">
+                            <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-circle-info me-2"></i>Executive Summary</h5>
+                            <p class="lead" style="line-height: 1.6; font-size: 1.15rem;">
+                                {{ reel.summary }}
+                            </p>
+                            <hr class="border-secondary my-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fa-solid fa-clapperboard fa-3x text-muted"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Reel Duration</h6>
+                                    <p class="text-muted mb-0">Total of {% set total_dur = namespace(val=0) %}{% for s in reel.scenes %}{% set total_dur.val = total_dur.val + s.duration %}{% endfor %}{{ total_dur.val | round(1) }} seconds across {{ reel.scenes | length }} scenes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Script & Scenes Tab -->
+                    <div class="tab-pane fade" id="tab-script" role="tabpanel">
+                        <div style="max-height: 500px; overflow-y: auto; padding-right: 5px;">
+                            {% for scene in reel.scenes %}
+                            <div class="scene-strip">
+                                <div class="scene-header">
+                                    <span class="scene-badge">Scene {{ scene.scene_number }}</span>
+                                    <span class="scene-duration"><i class="fa-regular fa-clock me-1 text-secondary"></i> {{ scene.duration }}s</span>
+                                </div>
+                                <p class="scene-narration text-white mb-2">{{ scene.narration }}</p>
+                                <div class="scene-prompt mt-2">
+                                    <i class="fa-solid fa-robot me-1 text-secondary small"></i> <strong class="small text-secondary">Prompt:</strong> <span class="small text-muted">{{ scene.image_prompt }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Visuals Gallery Tab -->
+                    <div class="tab-pane fade" id="tab-visuals" role="tabpanel">
+                        <div class="row g-3">
+                            {% for scene in reel.scenes %}
+                            <div class="col-md-6 col-sm-12">
+                                <div class="reel-card border-glass p-2">
+                                    <div class="text-center mb-2">
+                                        <span class="badge bg-dark border border-secondary text-secondary">Scene {{ scene.scene_number }} Image</span>
+                                    </div>
+                                    <div style="border-radius: 10px; overflow: hidden; background: #000;">
+                                        <img src="{{ scene.image_url }}" alt="Scene {{ scene.scene_number }} image" class="img-fluid w-100" style="height: 320px; object-fit: cover;">
+                                    </div>
+                                    <div class="mt-2 text-center">
+                                        <a href="{{ scene.image_url }}" download="scene_{{ scene.scene_number }}.jpg" class="btn btn-secondary-glow btn-sm py-1 px-3 mt-1"><i class="fa-solid fa-download me-1"></i> Save Image</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Technical Meta Tab -->
+                    <div class="tab-pane fade" id="tab-meta" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-muted py-3" style="width: 35%;">Task Reference ID</td>
+                                        <td class="font-monospace text-secondary py-3">{{ reel.task_id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted py-3">Output Resolution</td>
+                                        <td class="py-3">1080 &times; 1920 (Vertical 9:16)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted py-3">Aspect Ratio</td>
+                                        <td class="py-3">9:16 Reel/Short format</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted py-3">Render Framerate</td>
+                                        <td class="py-3">24 fps (Cinematic standard)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted py-3">Voice synthesis engine</td>
+                                        <td class="py-3">Edge-TTS (Azure Neural)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted py-3">Stitching Engine</td>
+                                        <td class="py-3">MoviePy Python Library</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{% endblock %}
